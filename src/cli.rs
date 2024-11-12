@@ -25,6 +25,9 @@ pub enum Command {
     Set {
         new_value: f64,
     },
+    Switch {
+        name: String,
+    },
     New {
         name: String,
         #[arg(default_value = "0.0")]

@@ -89,6 +89,7 @@ fn main() -> anyhow::Result<()> {
                 println!("there is no active number (add one with \"new [name] (value)\")");
             }
         }
+        cli_calc::cli::Command::Switch { name } => todo!(),
         cli_calc::cli::Command::New { name, value, overwrite } => {
             if overwrite == Bool::True {
                 let overwritten = storage.numbers
