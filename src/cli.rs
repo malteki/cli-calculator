@@ -33,7 +33,7 @@ pub enum Command {
         #[arg(default_value = "0.0")]
         value: f64,
         #[arg(default_value = "false")]
-        overwrite: Bool,
+        overwrite: bool,
     },
     List,
     // History,

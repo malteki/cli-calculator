@@ -89,9 +89,20 @@ fn main() -> anyhow::Result<()> {
                 println!("there is no active number (add one with \"new [name] (value)\")");
             }
         }
-        cli_calc::cli::Command::Switch { name } => todo!(),
+        cli_calc::cli::Command::Switch { name } => {
+            if storage.numbers.contains_key(&name) {
+                println!(
+                    "active value: \"{}\" -> \"{name}\"",
+                    storage.active_number.as_ref().unwrap_or(&"-".to_string())
+                );
+
+                storage.active_number = Some(name);
+            } else {
+                println!("not found");
+            }
+        }
         cli_calc::cli::Command::New { name, value, overwrite } => {
-            if overwrite == Bool::True {
+            if overwrite {
                 let overwritten = storage.numbers
                     .insert(name.clone(), value)
                     .map_or("none".to_string(), |old| { format!("{old}") });
