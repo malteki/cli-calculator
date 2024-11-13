@@ -29,15 +29,15 @@ fn main() -> anyhow::Result<()> {
     let action_time = Instant::now();
     match args.action {
         cli_calc::cli::Command::Add { value } => {
-            if let Some(active_number) = &storage.active_var {
-                if let Some(old) = storage.variables.get_mut(active_number) {
-                    println!("[{active_number}]: {old} + {value} = {}", *old + value);
+            if let Some(active_var) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_var) {
+                    println!("[{active_var}]: {old} + {value} = {}", *old + value);
                     *old += value;
                 } else {
-                    println!("failed to find active number (no key \"{active_number}\")");
+                    println!("failed to find active variable (no key \"{active_var}\")");
                 }
             } else {
-                println!("there is no active number (add one with \"new [name] (value)\")");
+                println!("there is no active variable (add one with \"new [name] (value)\")");
             }
         }
         cli_calc::cli::Command::Sub { value } => {
@@ -46,10 +46,10 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_number}]: {old} - {value} = {}", *old - value);
                     *old -= value;
                 } else {
-                    println!("failed to find active number (no key \"{active_number}\")");
+                    println!("failed to find active variable (no key \"{active_number}\")");
                 }
             } else {
-                println!("there is no active number (add one with \"new [name] (value)\")");
+                println!("there is no active variable (add one with \"new [name] (value)\")");
             }
         }
         cli_calc::cli::Command::Mul { value } => {
@@ -58,34 +58,34 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_number}]: {old} * {value} = {}", *old * value);
                     *old *= value;
                 } else {
-                    println!("failed to find active number (no key \"{active_number}\")");
+                    println!("failed to find active variable (no key \"{active_number}\")");
                 }
             } else {
-                println!("there is no active number (add one with \"new [name] (value)\")");
+                println!("there is no active variable (add one with \"new [name] (value)\")");
             }
         }
         cli_calc::cli::Command::Div { value } => {
-            if let Some(active_number) = &storage.active_var {
-                if let Some(old) = storage.variables.get_mut(active_number) {
-                    println!("[{active_number}]: {old} / {value} = {}", *old / value);
+            if let Some(active_var) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_var) {
+                    println!("[{active_var}]: {old} / {value} = {}", *old / value);
                     *old /= value;
                 } else {
-                    println!("failed to find active number (no key \"{active_number}\")");
+                    println!("failed to find active variable (no key \"{active_var}\")");
                 }
             } else {
-                println!("there is no active number (add one with \"new [name] (value)\")");
+                println!("there is no active variable (add one with \"new [name] (value)\")");
             }
         }
         cli_calc::cli::Command::Set { new_value: new_val } => {
-            if let Some(active_number) = &storage.active_var {
-                if let Some(old) = storage.variables.get_mut(active_number) {
-                    println!("[{active_number}]: {old} -> {new_val}");
+            if let Some(active_var) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_var) {
+                    println!("[{active_var}]: {old} -> {new_val}");
                     *old = new_val;
                 } else {
-                    println!("failed to find active number (no key \"{active_number}\")");
+                    println!("failed to find active variable (no key \"{active_var}\")");
                 }
             } else {
-                println!("there is no active number (add one with \"new [name] (value)\")");
+                println!("there is no active variable (add one with \"new [name] (value)\")");
             }
         }
         cli_calc::cli::Command::Switch { name } => {
