@@ -1,9 +1,8 @@
 use std::time::Instant;
 
-use anyhow::Context;
 use clap::Parser;
 use cli_calc::{
-    cli::{ Args, Bool },
+    cli::Args,
     file_handler::{
         config::{ load_config_file, write_config_file_pretty },
         storage::{ load_storage_file, write_storage_file_pretty },
@@ -30,8 +29,8 @@ fn main() -> anyhow::Result<()> {
     let action_time = Instant::now();
     match args.action {
         cli_calc::cli::Command::Add { value } => {
-            if let Some(active_number) = &storage.active_number {
-                if let Some(old) = storage.numbers.get_mut(active_number) {
+            if let Some(active_number) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_number) {
                     println!("[{active_number}]: {old} + {value} = {}", *old + value);
                     *old += value;
                 } else {
@@ -42,8 +41,8 @@ fn main() -> anyhow::Result<()> {
             }
         }
         cli_calc::cli::Command::Sub { value } => {
-            if let Some(active_number) = &storage.active_number {
-                if let Some(old) = storage.numbers.get_mut(active_number) {
+            if let Some(active_number) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_number) {
                     println!("[{active_number}]: {old} - {value} = {}", *old - value);
                     *old -= value;
                 } else {
@@ -54,8 +53,8 @@ fn main() -> anyhow::Result<()> {
             }
         }
         cli_calc::cli::Command::Mul { value } => {
-            if let Some(active_number) = &storage.active_number {
-                if let Some(old) = storage.numbers.get_mut(active_number) {
+            if let Some(active_number) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_number) {
                     println!("[{active_number}]: {old} * {value} = {}", *old * value);
                     *old *= value;
                 } else {
@@ -66,8 +65,8 @@ fn main() -> anyhow::Result<()> {
             }
         }
         cli_calc::cli::Command::Div { value } => {
-            if let Some(active_number) = &storage.active_number {
-                if let Some(old) = storage.numbers.get_mut(active_number) {
+            if let Some(active_number) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_number) {
                     println!("[{active_number}]: {old} / {value} = {}", *old / value);
                     *old /= value;
                 } else {
@@ -78,8 +77,8 @@ fn main() -> anyhow::Result<()> {
             }
         }
         cli_calc::cli::Command::Set { new_value: new_val } => {
-            if let Some(active_number) = &storage.active_number {
-                if let Some(old) = storage.numbers.get_mut(active_number) {
+            if let Some(active_number) = &storage.active_var {
+                if let Some(old) = storage.variables.get_mut(active_number) {
                     println!("[{active_number}]: {old} -> {new_val}");
                     *old = new_val;
                 } else {
@@ -90,38 +89,29 @@ fn main() -> anyhow::Result<()> {
             }
         }
         cli_calc::cli::Command::Switch { name } => {
-            if storage.numbers.contains_key(&name) {
+            if storage.variables.contains_key(&name) {
                 println!(
-                    "active value: \"{}\" -> \"{name}\"",
-                    storage.active_number.as_ref().unwrap_or(&"-".to_string())
+                    "active variable: \"{}\" -> \"{name}\"",
+                    storage.active_var.as_ref().unwrap_or(&"-".to_string())
                 );
 
-                storage.active_number = Some(name);
+                storage.active_var = Some(name);
             } else {
                 println!("not found");
             }
         }
-        cli_calc::cli::Command::New { name, value, overwrite } => {
-            if overwrite {
-                let overwritten = storage.numbers
-                    .insert(name.clone(), value)
-                    .map_or("none".to_string(), |old| { format!("{old}") });
-                println!("insterted \"{name}\" = {value} (overwritten: {overwritten})");
-
-                storage.active_number = Some(name);
+        cli_calc::cli::Command::New { name, value } => {
+            if storage.variables.contains_key(&name) {
+                println!("this variable already exists (try deleting the old variable)");
             } else {
-                if storage.numbers.contains_key(&name) {
-                    println!("this number already exists (try adding overwrite=true)");
-                } else {
-                    storage.numbers.insert(name.clone(), value);
-                    println!("insterted \"{name}\" = {value}");
+                storage.variables.insert(name.clone(), value);
+                println!("insterted \"{name}\" = {value}");
 
-                    storage.active_number = Some(name);
-                }
+                storage.active_var = Some(name);
             }
         }
         cli_calc::cli::Command::List => {
-            let mut pairs = storage.numbers.iter().collect::<Vec<_>>();
+            let mut pairs = storage.variables.iter().collect::<Vec<_>>();
 
             pairs.sort_by(|a, b| { a.0.cmp(&b.0) });
 

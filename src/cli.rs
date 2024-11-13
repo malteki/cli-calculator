@@ -32,8 +32,6 @@ pub enum Command {
         name: String,
         #[arg(default_value = "0.0")]
         value: f64,
-        #[arg(default_value = "false")]
-        overwrite: bool,
     },
     List,
     // History,
@@ -48,8 +46,8 @@ pub enum Command {
     DeleteAll,
 }
 
-#[derive(clap::ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Bool {
-    True,
-    False,
-}
+// #[derive(clap::ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
+// pub enum Bool {
+//     True,
+//     False,
+// }

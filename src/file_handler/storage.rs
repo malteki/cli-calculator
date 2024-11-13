@@ -6,13 +6,13 @@ use hashbrown::HashMap;
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct StorageFile {
-    pub active_number: Option<String>,
-    pub numbers: HashMap<String, f64>,
+    pub active_var: Option<String>,
+    pub variables: HashMap<String, f64>,
 }
 
 impl Default for StorageFile {
     fn default() -> Self {
-        Self { active_number: None, numbers: HashMap::new() }
+        Self { active_var: None, variables: HashMap::new() }
     }
 }
 
