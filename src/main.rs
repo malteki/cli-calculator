@@ -127,8 +127,23 @@ fn main() -> anyhow::Result<()> {
             config.print_timing = !config.print_timing;
             println!("config.print_timing = {}", config.print_timing);
         }
-        cli_calc::cli::Command::Delete { name } => todo!(),
-        cli_calc::cli::Command::DeleteAll => todo!(),
+        cli_calc::cli::Command::Delete { name } => {
+            match storage.variables.remove_entry(&name) {
+                Some((name, val)) => {
+                    println!("deleted \"{name}\" (value: {val})");
+                    if storage.active_var == Some(name) {
+                        storage.active_var = None;
+                    }
+                }
+                None => println!("not found"),
+            }
+        }
+        cli_calc::cli::Command::DeleteAll => {
+            // TODO: let user confirm action
+            let count = storage.variables.len();
+            storage.variables.clear();
+            println!("deleted {count} variables");
+        }
     }
     let action_time = action_time.elapsed();
 
