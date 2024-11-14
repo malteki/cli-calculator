@@ -34,7 +34,8 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_var}]: {old} + {value} = {}", *old + value);
                     *old += value;
                 } else {
-                    println!("failed to find active variable (no key \"{active_var}\")");
+                    println!("failed to find active variable with key \"{active_var}\"");
+                    storage.active_var = None;
                 }
             } else {
                 println!("there is no active variable (add one with \"new [name] (value)\")");
@@ -46,7 +47,8 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_number}]: {old} - {value} = {}", *old - value);
                     *old -= value;
                 } else {
-                    println!("failed to find active variable (no key \"{active_number}\")");
+                    println!("failed to find active variable with key \"{active_number}\"");
+                    storage.active_var = None;
                 }
             } else {
                 println!("there is no active variable (add one with \"new [name] (value)\")");
@@ -58,7 +60,8 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_number}]: {old} * {value} = {}", *old * value);
                     *old *= value;
                 } else {
-                    println!("failed to find active variable (no key \"{active_number}\")");
+                    println!("failed to find active variable with key \"{active_number}\"");
+                    storage.active_var = None;
                 }
             } else {
                 println!("there is no active variable (add one with \"new [name] (value)\")");
@@ -70,7 +73,8 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_var}]: {old} / {value} = {}", *old / value);
                     *old /= value;
                 } else {
-                    println!("failed to find active variable (no key \"{active_var}\")");
+                    println!("failed to find active variable with key \"{active_var}\"");
+                    storage.active_var = None;
                 }
             } else {
                 println!("there is no active variable (add one with \"new [name] (value)\")");
@@ -82,7 +86,8 @@ fn main() -> anyhow::Result<()> {
                     println!("[{active_var}]: {old} -> {new_val}");
                     *old = new_val;
                 } else {
-                    println!("failed to find active variable (no key \"{active_var}\")");
+                    println!("failed to find active variable with key \"{active_var}\"");
+                    storage.active_var = None;
                 }
             } else {
                 println!("there is no active variable (add one with \"new [name] (value)\")");
@@ -116,7 +121,11 @@ fn main() -> anyhow::Result<()> {
             pairs.sort_by(|a, b| { a.0.cmp(&b.0) });
 
             for (key, val) in pairs {
-                println!("{key} = {val}");
+                if storage.active_var.as_ref() == Some(key) {
+                    println!("{key} = {val} (active)");
+                } else {
+                    println!("{key} = {val}");
+                }
             }
         }
         cli_calc::cli::Command::PrintTiming { value: Some(new_val) } => {
